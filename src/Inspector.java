@@ -63,34 +63,7 @@ public class Inspector {
 		}
 		
   }
-	
-  public String getDeclaringClassName(Class classObject)
-  {
-	  String className = classObject.getName();
-	  return className;
-  }
-  
-  public String getSuperClassName(Class classObject)
-  {
-	  String superName = classObject.getSuperclass().getName();
-	  return superName;
-  }
-  
-  public String queryInterfaces(Class classObject)
-  {
-	  Class[] interfaces = classObject.getInterfaces();
-	  String interfaceAsString = "";
-	  for (Class a_interface:interfaces)
-	  {
-		  interfaceAsString = interfaceAsString + a_interface.getName();
-		  interfaceAsString = interfaceAsString + "\n";
-		  
-	  }
-	  
-	  return interfaceAsString;
-  }
-  
-  
+	 
 	
 
 	  public String getDeclaringClassName(Class classObject)
