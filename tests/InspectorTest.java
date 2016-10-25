@@ -75,7 +75,7 @@ public class InspectorTest {
 		
 		Field f = null;
 		try {
-			f = b.getClass().getDeclaredField("b");
+			f = b.getClass().getDeclaredField("a");
 		} catch (NoSuchFieldException | SecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,7 +83,7 @@ public class InspectorTest {
 		
 		Inspector i = new Inspector();
 		
-		System.out.println(i.queryFieldValue(f));
+		assertEquals( "1", i.queryFieldValue(f, b));
 	}
 	
 }

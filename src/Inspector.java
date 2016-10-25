@@ -54,6 +54,11 @@ public class Inspector {
 		String interfaceNames = queryInterfaces(obj.getClass());
 		System.out.println(interfaceNames);
 		
+		
+		String fieldsInfo = queryFields(obj.getClass());
+		System.out.println("FIELDS:");
+		System.out.println(fieldsInfo);
+		
 		printMethodsInfo(obj.getClass());
 		
 		printConstructors(obj.getClass());
@@ -150,6 +155,7 @@ public class Inspector {
 			  fieldsAsString = fieldsAsString + "Type: " + aField.getType().getSimpleName() + "\n";
 			  int modifiers = aField.getModifiers();
 			  fieldsAsString = fieldsAsString + "Modifiers: " + Modifier.toString(modifiers) + "\n";
+			  //fieldsAsString = fieldsAsString + "Value: " + queryFieldValue(aField, classObject);
 			  fieldsAsString = fieldsAsString + "****************" + "\n";
 			  
 		  }
@@ -157,16 +163,16 @@ public class Inspector {
 	  }
 	  
 	  
-	  public String queryFieldValue(Field aField)
+	  public String queryFieldValue(Field aField, Object obj)
 	  {
 		  aField.setAccessible(true);
 		  String fieldValueAsString = "";
 		  
-		  if (aField.getClass().isPrimitive())
+		  if (aField.getType().isPrimitive())
 		  {
 			  Class<?> aPrimitiveClass = aField.getType();
 			  try {
-				fieldValueAsString =  aField.get(aPrimitiveClass).toString();
+				fieldValueAsString =  aField.get(obj).toString();
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
