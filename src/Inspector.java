@@ -1,15 +1,25 @@
 
 import java.lang.reflect.*;
+import java.util.Hashtable;
+import java.util.ArrayList;
 
 public class Inspector {
 	
+	private boolean recursive;
+	private Object main_Obj;
+	private Hashtable table;
+	
 	public Inspector()
 	{
-		
+		table = new Hashtable();
+		//objectsToProcess = new ArrayList<Object>();
 	}
 
 	public void inspect(Object obj, boolean recursive)
 	{
+		
+		this.recursive = recursive;
+		
 		if (obj.getClass().isArray())
 		{
 			handleArray(obj, recursive);
@@ -23,6 +33,33 @@ public class Inspector {
 	
 	public void handleInspection(Object obj, boolean recursive)
 	{
+		if (table.contains(obj) && recursive == false)
+		{
+			return;
+		} else if (table.contains(obj) && recursive == true)
+		{
+			System.out.println("The object " + obj.getClass() + " : " + obj.hashCode() + " has already been inspected");
+			return;
+		}
+		
+		
+		
+		
+		String name = getDeclaringClassName(obj.getClass());
+		System.out.println(name);
+		
+		String superClassName = getSuperClassName(obj.getClass());
+		System.out.println(superClassName);
+		
+		String interfaceNames = queryInterfaces(obj.getClass());
+		System.out.println(interfaceNames);
+		
+		printMethodsInfo(obj.getClass());
+		
+		printConstructors(obj.getClass());
+		
+		table.put(obj, obj);
+		
 		
 	}
 	
@@ -32,17 +69,24 @@ public class Inspector {
 		for (int i = 0; i < length; i++)
 		{
 			Object obj = Array.get(array, i);
+			
 			handleInspection(obj, recursive);
 		}
 		
 	}
-	/*
+
 	public String queryArrayInfo(Object array)
 	{
 		String arrayInfoAsString = "";
 		
-		arrayInfoAsString = arrayInfoAsString + "Name: " + array.
-	}*/
+		
+		arrayInfoAsString = arrayInfoAsString + "Name: " + "\n";
+		arrayInfoAsString = arrayInfoAsString + "Length: " + Array.getLength(array) + "\n";
+		arrayInfoAsString = arrayInfoAsString + "Componenet type: " +array.getClass().getSimpleName() + "\n";
+	    
+	    return arrayInfoAsString;
+	}
+	
 	
 	
 	
@@ -92,6 +136,7 @@ public class Inspector {
 				
 	          return interfaceAsString;
 	  }
+	  
 	  
 	  public String queryFields(Class classObject)
 	  {

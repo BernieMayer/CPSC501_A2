@@ -11,6 +11,19 @@ public class InspectorTest {
 	public void test() {
 		//fail("Not yet implemented");
 	}
+	
+	@Test
+	public void testQueryArrayInfo()
+	{
+		int[] array = new int[] {1, 2, 3, 4};
+		
+		Inspector i = new Inspector();
+		
+	    String output = i.queryArrayInfo(array);
+	    
+	    assertTrue(output.contains("Length: 4"));
+	    assertTrue(output.contains("int"));
+	}
 
 	
 	@Test
