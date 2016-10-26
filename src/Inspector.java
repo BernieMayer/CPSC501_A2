@@ -33,29 +33,35 @@ public class Inspector {
 	
 	public void handleInspection(Object obj, boolean recursive)
 	{
+		if (obj == null)
+		{
+			System.out.println("The object is null");
+			return;
+		}
 		if (table.contains(obj) && recursive == false)
 		{
 			return;
 		} else if (table.contains(obj) && recursive == true)
 		{
-			System.out.println("The object " + obj.getClass() + " : " + obj.hashCode() + " has already been inspected");
+			System.out.println("The object " + obj.getClass().getSimpleName() + " : " + obj.hashCode() + " has already been inspected");
 			return;
 		}
 		
 		
 		
-		
 		String name = getDeclaringClassName(obj.getClass());
-		System.out.println(name);
+		System.out.println("The class name is: " + name);
+	
 		
 		String superClassName = getSuperClassName(obj.getClass());
-		System.out.println(superClassName);
+		System.out.println("The Super Class is :" + superClassName);
 		
 		String interfaceNames = queryInterfaces(obj.getClass());
+		System.out.println("The interfaces this class implements are: ");
 		System.out.println(interfaceNames);
 		
 		
-		String fieldsInfo = queryFields(obj.getClass());
+		String fieldsInfo = queryFields(obj);
 		System.out.println("FIELDS:");
 		System.out.println(fieldsInfo);
 		
@@ -65,16 +71,21 @@ public class Inspector {
 		
 		table.put(obj, obj);
 		
-		
+
 	}
+	
+	
 	
 	public void handleArray(Object array, boolean recursive)
 	{
+		String arrayInfo = queryArrayInfo(array);
+		System.out.println(arrayInfo);
 		int length = Array.getLength(array);
 		for (int i = 0; i < length; i++)
 		{
 			Object obj = Array.get(array, i);
 			
+			System.out.println("Now showing the object at index : " + i);
 			handleInspection(obj, recursive);
 		}
 		
@@ -84,8 +95,9 @@ public class Inspector {
 	{
 		String arrayInfoAsString = "";
 		
+		arrayInfoAsString += "This object is an array \n";
 		
-		arrayInfoAsString = arrayInfoAsString + "Name: " + "\n";
+		//arrayInfoAsString = arrayInfoAsString + "Name: " + "\n";
 		arrayInfoAsString = arrayInfoAsString + "Length: " + Array.getLength(array) + "\n";
 		arrayInfoAsString = arrayInfoAsString + "Componenet type: " +array.getClass().getSimpleName() + "\n";
 	    
@@ -143,25 +155,69 @@ public class Inspector {
 	  }
 	  
 	  
-	  public String queryFields(Class classObject)
+	  public String queryFields(Object obj)
 	  {
+		  Class classObject = obj.getClass();
 		  Field[] fields = classObject.getDeclaredFields();
 		  String fieldsAsString = "";
 		  
 		  for (Field aField:fields)
 		  {
-			  aField.setAccessible(true); //just in case
+			  aField.setAccessible(true);
+			  if ( aField.getType().isArray())
+			  {
+				  Object arrayObject = null;
+				  int length = 0;
+				try {
+					arrayObject = aField.get(obj);
+					length = Array.getLength(arrayObject);
+				} catch (IllegalArgumentException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			    fieldsAsString += arrayObject.getClass().getSimpleName() + " Is an array of length " + length + "\n";
+			    //show the array modifiers
+				for (int i = 0; i < length; i++)
+				{
+					fieldsAsString += "Now showing the item at index: " + i + "\n";
+					Object arrayItem = Array.get(arrayObject, i);
+					fieldsAsString += "Value: " + queryObjectValue(arrayItem);
+					fieldsAsString += "*****************" + "\n";
+				}
+				  
+			  }
 			  fieldsAsString = fieldsAsString + "Name: " + aField.getName() + "\n";
 			  fieldsAsString = fieldsAsString + "Type: " + aField.getType().getSimpleName() + "\n";
 			  int modifiers = aField.getModifiers();
 			  fieldsAsString = fieldsAsString + "Modifiers: " + Modifier.toString(modifiers) + "\n";
-			  //fieldsAsString = fieldsAsString + "Value: " + queryFieldValue(aField, classObject);
+			  fieldsAsString = fieldsAsString + "Value: " + queryFieldValue(aField, obj);
 			  fieldsAsString = fieldsAsString + "****************" + "\n";
 			  
 		  }
 		  return fieldsAsString;
 	  }
 	  
+	  public String queryObjectValue(Object obj)
+	  {
+		  if (obj == null)
+		  {
+			  return "The object is null \n";
+		  }
+		  String objValueAsString = "";
+		  if (obj.getClass().isPrimitive())
+		  {
+			  objValueAsString += obj.toString() + "\n";
+		  } else
+		  {
+			  objValueAsString += obj.getClass().getSimpleName() + " : " + obj.hashCode() + "\n";
+		  }
+		  
+		  return objValueAsString;
+	  }
 	  
 	  public String queryFieldValue(Field aField, Object obj)
 	  {
@@ -172,14 +228,15 @@ public class Inspector {
 		  {
 			  Class<?> aPrimitiveClass = aField.getType();
 			  try {
-				fieldValueAsString =  aField.get(obj).toString();
+				fieldValueAsString =  aField.get(obj).toString() + "\n";
 			} catch (IllegalArgumentException | IllegalAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		  } else 
 			{
-				fieldValueAsString = aField.getClass().getSimpleName() + " : " + aField.hashCode();
+			   
+				fieldValueAsString = obj.getClass().getSimpleName() + " : " + obj.hashCode() + "\n";
 			}
 		  
 		  
@@ -220,11 +277,12 @@ public class Inspector {
 			    
 			    
 			    
-			    
+			    /*
 			    System.out.println("***************");
 			    System.out.println("Method toString()");
 			    System.out.println(method);
 			    System.out.println("***************");
+			    */
 			}
 			
 			
