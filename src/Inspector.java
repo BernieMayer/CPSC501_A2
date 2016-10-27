@@ -47,7 +47,7 @@ public class Inspector {
 			return;
 		}
 		
-		
+		table.put(obj, obj);
 		
 		String name = getDeclaringClassName(obj.getClass());
 		System.out.println("The class name is: " + name);
@@ -69,7 +69,7 @@ public class Inspector {
 		
 		printConstructors(obj.getClass());
 		
-		table.put(obj, obj);
+		
 		
 
 	}
@@ -235,8 +235,29 @@ public class Inspector {
 			}
 		  } else 
 			{
-			   
+			  	if (recursive)
+			  	{
+			  		System.out.println("Now inspecting " + obj.getClass().getSimpleName() + " : " + obj.hashCode());
+			  		Object objectToInspect = null;
+			  		try {
+			  			objectToInspect = aField.get(obj);
+					} catch (IllegalArgumentException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IllegalAccessException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+			  		if (objectToInspect == null)
+			  		{
+			  			fieldValueAsString += "The object is null " + "\n";
+			  			return fieldValueAsString;
+			  		}
+			  		inspect(objectToInspect, recursive);
+			  		
+			  	} else {
 				fieldValueAsString = obj.getClass().getSimpleName() + " : " + obj.hashCode() + "\n";
+			  	}
 			}
 		  
 		  

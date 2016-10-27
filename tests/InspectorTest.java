@@ -55,9 +55,8 @@ public class InspectorTest {
 		Inspector i = new Inspector();
 		MockClassA a = new MockClassA();
 		
-		String output = i.queryFields(a.getClass());
+		String output = i.queryFields(a);
 		
-		System.out.println(i.queryFields(a.getClass()));
 		
 		assertTrue(output.contains("volatile"));
 		assertTrue(output.contains("public"));
@@ -65,6 +64,32 @@ public class InspectorTest {
 		
 		
 	}
+	
+	@Test 
+	public void testQueryFieldWithClass()
+	{
+		MockClassB b = new MockClassB();
+		MockClassA a = new MockClassA();
+		
+		b.aClass = a;
+		
+		Field f = null;
+		try 
+		{
+			f = b.getClass().getDeclaredField("aClass");
+			
+		}  catch (NoSuchFieldException | SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Inspector i = new Inspector();
+		String output = i.queryFieldValue(f, b);
+		
+		assertTrue(output.contains("MockClassB"));
+		
+	}
+	
 	
 	@Test
 	public void testQueryFieldValue()
@@ -83,7 +108,7 @@ public class InspectorTest {
 		
 		Inspector i = new Inspector();
 		
-		assertEquals( "1", i.queryFieldValue(f, b));
+		assertTrue(i.queryFieldValue(f, b).contains("1"));
 	}
 	
 }
