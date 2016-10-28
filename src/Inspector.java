@@ -55,6 +55,25 @@ public class Inspector {
 		
 		table.put(obj.hashCode(), obj);
 		
+		printObjectInspection(obj);
+		
+		if (obj.getClass().getSuperclass() != null)
+		{
+			Class superClass = obj.getClass().getSuperclass();			
+			System.out.println("Now display " + obj.getClass().getSimpleName() + " superClass");
+			printObjectInspection(superClass, obj, recursive);
+		
+		}
+	}
+
+
+
+
+
+	/**
+	 * @param obj the object to inspect
+	 */
+	private void printObjectInspection(Object obj) {
 		String name = getDeclaringClassName(obj.getClass());
 		System.out.println("The class name is: " + name);
 	
@@ -77,14 +96,6 @@ public class Inspector {
 		
 		System.out.println("METHODS:");
 		printMethodsInfo(obj.getClass());
-		
-		if (obj.getClass().getSuperclass() != null)
-		{
-			Class superClass = obj.getClass().getSuperclass();			
-			System.out.println("Now display " + obj.getClass().getSimpleName() + " superClass");
-			printObjectInspection(superClass, obj, recursive);
-		
-		}
 	}
 	
 	public void printObjectInspection(Class aClass, Object obj, boolean recursive)
