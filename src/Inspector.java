@@ -40,6 +40,8 @@ public class Inspector extends QueryObjects {
 		
 	}
 	
+	
+	
 	private void processObjects()
 	{
 		QueryObjects i = new Inspector();
@@ -131,8 +133,14 @@ public class Inspector extends QueryObjects {
 		{
 			Object obj = Array.get(array, i);
 			
-			System.out.println("Now showing the object at index : " + i);
-			handleInspection(obj, recursive);
+			System.out.println("Now showing the object at index  [" + i +"]");
+			if (array.getClass().getComponentType().isArray())
+			{
+				handleArray(obj, recursive);
+			} else {
+              System.out.println();			
+			  handleInspection(obj, recursive);
+			}
 		}
 		
 	}
@@ -327,7 +335,16 @@ public class Inspector extends QueryObjects {
 			    System.out.println("method parameter types");
 			    for (Class paramater:parameterList)
 			    {
+			    	if (paramater.isArray())
+			    	{
+			    		String arrayParamMessage = "";
+			    		int length = 1 + paramater.getName().lastIndexOf("[");
+			    		arrayParamMessage += paramater.getComponentType().getSimpleName() +"[]";
+			    		System.out.println(arrayParamMessage);
+			    	} else {
+			    	
 			    	System.out.println(paramater.getName() + " ");
+			    	}
 			    }
 			    System.out.println();
 			    
@@ -365,7 +382,7 @@ public class Inspector extends QueryObjects {
 				
 				//Get and print access modifier of each constructor
 				int modifiers = constructor.getModifiers();
-				System.out.println("Constructor modidifier: " + Modifier.toString(modifiers));
+				System.out.println("Constructor modifier: " + Modifier.toString(modifiers));
 				
 				
 				//Get and print parameter types
@@ -380,7 +397,7 @@ public class Inspector extends QueryObjects {
 				//Get and print exception throws by consctructors
 				
 				Class[] exceptionList = constructor.getExceptionTypes();
-				System.out.println("Exception thrown by constructors:  ");
+				System.out.println("Exception thrown by constructor:  ");
 				for (Class exception: exceptionList)
 				{
 					System.out.println(exception.getName() + " ");

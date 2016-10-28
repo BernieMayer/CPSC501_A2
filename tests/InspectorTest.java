@@ -90,14 +90,41 @@ public class InspectorTest {
 		
 	}
 	
+
+	
 	
 	@Test
 	public void testInfiniteRecursion()
 	{
+		
+		System.out.println("Running test infiniteRecursion()");
+		//This tests will pass if this test case terminates
 		MockClassC c = new MockClassC();
 		Inspector i = new Inspector();
 		
 		i.inspect(c, true);
+		
+		System.out.println("***************");
+	}
+	
+	@Test
+	public void testPrintingMethodWithArrayParam()
+	{
+		//To test this requires looking into the console
+		
+		
+		System.out.println("Running test testPrintingMethodWithArrayParam()");
+		
+		Inspector i = new Inspector();
+		MockClassC c = new MockClassC();
+		
+		System.out.println("This method contains an array of Strings as a paramater");
+		
+		i.printMethodsInfo(c.getClass());
+		
+		System.out.println("***************************************");
+		
+		
 	}
 	
 	@Test
