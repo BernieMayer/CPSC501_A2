@@ -55,13 +55,13 @@ public class Inspector {
 		
 		table.put(obj.hashCode(), obj);
 		
-		printObjectInspection(obj);
+		printObjectInspection(obj.getClass(), obj);
 		
 		if (obj.getClass().getSuperclass() != null)
 		{
 			Class superClass = obj.getClass().getSuperclass();			
 			System.out.println("Now display " + obj.getClass().getSimpleName() + " superClass");
-			printObjectInspection(superClass, obj, recursive);
+			printObjectInspection(superClass, obj);
 		
 		}
 	}
@@ -73,34 +73,7 @@ public class Inspector {
 	/**
 	 * @param obj the object to inspect
 	 */
-	private void printObjectInspection(Object obj) {
-		String name = getDeclaringClassName(obj.getClass());
-		System.out.println("The class name is: " + name);
-	
-		
-		String superClassName = getSuperClassName(obj.getClass());
-		System.out.println("The Super Class is :" + superClassName);
-		
-		String interfaceNames = queryInterfaces(obj.getClass());
-		System.out.println("The interfaces this class implements are: ");
-		System.out.println(interfaceNames);
-		
-		
-		String fieldsInfo = queryFields(obj, obj.getClass());
-		System.out.println("FIELDS:");
-		System.out.println(fieldsInfo);
-		
-		System.out.println("CONSTRUCTORS");
-		printConstructors(obj.getClass());
-		
-		
-		System.out.println("METHODS:");
-		printMethodsInfo(obj.getClass());
-	}
-	
-	public void printObjectInspection(Class aClass, Object obj, boolean recursive)
-	{
-		
+	private void printObjectInspection(Class aClass, Object obj) {
 		String name = getDeclaringClassName(aClass);
 		System.out.println("The class name is: " + name);
 	
@@ -123,8 +96,9 @@ public class Inspector {
 		
 		System.out.println("METHODS:");
 		printMethodsInfo(aClass);
-		
 	}
+	
+
 	
 	
 	
