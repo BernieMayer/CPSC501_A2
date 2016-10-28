@@ -8,12 +8,12 @@ public class Inspector {
 	private boolean recursive;
 	private Object main_Obj;
 	private Hashtable table;
-	
+	private ArrayList<Object> objectsToProcess;
 	
 	public Inspector()
 	{
 		table = new Hashtable();
-		//objectsToProcess = new ArrayList<Object>();
+		objectsToProcess = new ArrayList<Object>();
 	}
 
 	
@@ -33,7 +33,22 @@ public class Inspector {
 			handleInspection(obj, recursive);
 		}
 		
+		if (recursive)
+		{
+			processObjects();
+		}
 		
+	}
+	
+	private void processObjects()
+	{
+		Inspector i = new Inspector();
+		Object[] array = this.objectsToProcess.toArray();
+		this.objectsToProcess.clear();
+		for (Object obj : array)
+		{
+			inspect(obj, false);
+		}
 	}
 	
 	
@@ -44,7 +59,7 @@ public class Inspector {
 			System.out.println("The object is null");
 			return;
 		}
-		if (table.contains(obj) && recursive == false)
+		if (table.contains(obj.hashCode()) && recursive == false)
 		{
 			return;
 		} else if (table.contains(obj.hashCode()) && recursive == true)
@@ -57,12 +72,15 @@ public class Inspector {
 		
 		printObjectInspection(obj.getClass(), obj);
 		
-		if (obj.getClass().getSuperclass() != null)
+		Class objClass = obj.getClass();
+		
+		while (objClass.getSuperclass() != null)
 		{
 			Class superClass = obj.getClass().getSuperclass();			
 			System.out.println("Now display " + obj.getClass().getSimpleName() + " superClass");
 			printObjectInspection(superClass, obj);
-		
+			
+			objClass = objClass.getSuperclass();
 		}
 	}
 
@@ -96,6 +114,7 @@ public class Inspector {
 		
 		System.out.println("METHODS:");
 		printMethodsInfo(aClass);
+		
 	}
 	
 
@@ -107,6 +126,7 @@ public class Inspector {
 		String arrayInfo = queryArrayInfo(array);
 		System.out.println(arrayInfo);
 		int length = Array.getLength(array);
+	
 		for (int i = 0; i < length; i++)
 		{
 			Object obj = Array.get(array, i);
@@ -200,7 +220,8 @@ public class Inspector {
 				  int length = 0;
 				try {
 					arrayObject = aField.get(obj);
-					length = Array.getLength(arrayObject);
+					if (arrayObject != null)
+						length = Array.getLength(arrayObject);
 				} catch (IllegalArgumentException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -208,8 +229,12 @@ public class Inspector {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				
+				if (arrayObject == null)
+				{
+					fieldsAsString += "This field is null" + "\n";
+				} else {
 			    fieldsAsString += arrayObject.getClass().getSimpleName() + " Is an array of length " + length + "\n";
+				}
 			    //show the array modifiers
 				for (int i = 0; i < length; i++)
 				{
@@ -264,10 +289,9 @@ public class Inspector {
 				e.printStackTrace();
 			}
 		  } else 
-			{/*
+			{
 			  	if (recursive)
 			  	{
-			  		System.out.println("Now inspecting " + obj.getClass().getSimpleName() + " : " + obj.hashCode());
 			  		Object objectToInspect = null;
 			  		try {
 			  			objectToInspect = aField.get(obj);
@@ -280,13 +304,20 @@ public class Inspector {
 					}
 			  		if (objectToInspect == null)
 			  		{
-			  			fieldValueAsString += "The object is null " + "\n";
+			  			fieldValueAsString += "The field is null " + "\n";
 			  			return fieldValueAsString;
+			  		} else {
+			  			if ( ! this.objectsToProcess.contains(objectToInspect))
+			  			{
+			  				fieldValueAsString += "This object will be inspected later " 
+			  												+ objectToInspect.getClass().getSimpleName() + " : "
+			  												+ objectToInspect.hashCode() + "\n";
+			  				this.objectsToProcess.add(objectToInspect);
+			  			}
 			  		}
-			  		inspect(objectToInspect, recursive);
 			  		
 			  	} else {
-			  	*/
+			  	
 			  
 			    Object fieldObject = null;
 				try {
@@ -304,7 +335,7 @@ public class Inspector {
 				} else {
 				fieldValueAsString = fieldObject.getClass().getSimpleName() + " : " + fieldObject.hashCode() + "\n";
 				}
-				//}
+				}
 			}
 		  
 		  

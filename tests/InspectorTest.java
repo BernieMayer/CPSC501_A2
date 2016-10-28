@@ -92,6 +92,15 @@ public class InspectorTest {
 	
 	
 	@Test
+	public void testInfiniteRecursion()
+	{
+		MockClassC c = new MockClassC();
+		Inspector i = new Inspector();
+		
+		i.inspect(c, true);
+	}
+	
+	@Test
 	public void testQueryFieldValue()
 	{
 		MockClassB b = new MockClassB();
