@@ -107,11 +107,11 @@ public class Inspector {
 		System.out.println(fieldsInfo);
 		
 		System.out.println("CONSTRUCTORS");
-		printConstructors(obj.getClass());
+		printConstructors(aClass);
 		
 		
 		System.out.println("METHODS:");
-		printMethodsInfo(obj.getClass());
+		printMethodsInfo(aClass);
 		
 	}
 	
@@ -180,6 +180,8 @@ public class Inspector {
 		      {
 	          String superName = classObject.getSuperclass().getName();
 	          return superName;
+		      } else {
+		    	  return "<none>";
 		      }
 	  }
 	  
@@ -300,8 +302,24 @@ public class Inspector {
 			  		
 			  	} else {
 			  	*/
-				fieldValueAsString = obj.getClass().getSimpleName() + " : " + obj.hashCode() + "\n";
-			  	//}
+			  
+			    Object fieldObject = null;
+				try {
+					fieldObject = aField.get(obj);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				if (fieldObject == null)
+				{
+					fieldValueAsString += "The field is null" + "\n";
+				} else {
+				fieldValueAsString = fieldObject.getClass().getSimpleName() + " : " + fieldObject.hashCode() + "\n";
+				}
+				//}
 			}
 		  
 		  

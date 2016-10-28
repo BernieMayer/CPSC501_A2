@@ -55,7 +55,7 @@ public class InspectorTest {
 		Inspector i = new Inspector();
 		MockClassA a = new MockClassA();
 		
-		String output = i.queryFields(a);
+		String output = i.queryFields(a, a.getClass());
 		
 		
 		assertTrue(output.contains("volatile"));
@@ -86,7 +86,7 @@ public class InspectorTest {
 		Inspector i = new Inspector();
 		String output = i.queryFieldValue(f, b);
 		
-		assertTrue(output.contains("MockClassB"));
+		assertTrue(output.contains("MockClassA"));
 		
 	}
 	
