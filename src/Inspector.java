@@ -3,7 +3,7 @@ import java.lang.reflect.*;
 import java.util.Hashtable;
 import java.util.ArrayList;
 
-public class Inspector {
+public class Inspector extends QueryObjects {
 	
 	private boolean recursive;
 	private Object main_Obj;
@@ -42,7 +42,7 @@ public class Inspector {
 	
 	private void processObjects()
 	{
-		Inspector i = new Inspector();
+		QueryObjects i = new Inspector();
 		Object[] array = this.objectsToProcess.toArray();
 		this.objectsToProcess.clear();
 		for (Object obj : array)
@@ -137,23 +137,6 @@ public class Inspector {
 		
 	}
 
-	public String queryArrayInfo(Object array)
-	{
-		String arrayInfoAsString = "";
-		
-		arrayInfoAsString += "This object is an array \n";
-		
-		//arrayInfoAsString = arrayInfoAsString + "Name: " + "\n";
-		arrayInfoAsString = arrayInfoAsString + "Length: " + Array.getLength(array) + "\n";
-		arrayInfoAsString = arrayInfoAsString + "Componenet type: " +array.getClass().getSimpleName() + "\n";
-	    
-	    return arrayInfoAsString;
-	}
-	
-	
-	
-	
-	
 	/**
 	 * 
 	 * @param o
@@ -189,22 +172,6 @@ public class Inspector {
 		    	  return "<none>";
 		      }
 	  }
-	  
-	  public String queryInterfaces(Class classObject)
-	  {
-	          Class[] interfaces = classObject.getInterfaces();
-	          String interfaceAsString = "";
-	          
-	          for (Class a_interface:interfaces)
-	          {
-	                  interfaceAsString = interfaceAsString + a_interface.getName();
-	                  interfaceAsString = interfaceAsString + "\n";
-
-	          }
-				
-	          return interfaceAsString;
-	  }
-	  
 	  
 	  public String queryFields(Object obj, Class classObject)
 	  {

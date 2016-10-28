@@ -17,7 +17,7 @@ public class InspectorTest {
 	{
 		int[] array = new int[] {1, 2, 3, 4};
 		
-		Inspector i = new Inspector();
+		QueryObjects i = new Inspector();
 		
 	    String output = i.queryArrayInfo(array);
 	    
@@ -30,7 +30,7 @@ public class InspectorTest {
 	public void testQueryInterfacesUsingFileClass()
 	{
 		
-		Inspector i = new Inspector();
+		QueryObjects i = new Inspector();
 		
 		File f = new File("Inspector.java");
 		
@@ -43,7 +43,7 @@ public class InspectorTest {
 	@Test
 	public void testQueryInterfacesObjectClass()
 	{
-		Inspector i = new Inspector();
+		QueryObjects i = new Inspector();
 		Object o = new Object();
 		
 		assertTrue(i.queryInterfaces(o.getClass()).equals(""));
