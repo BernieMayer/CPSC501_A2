@@ -9,16 +9,21 @@ public class Inspector {
 	private Object main_Obj;
 	private Hashtable table;
 	
+	
 	public Inspector()
 	{
 		table = new Hashtable();
 		//objectsToProcess = new ArrayList<Object>();
 	}
 
+	
+
+	
+	
 	public void inspect(Object obj, boolean recursive)
 	{
-		
-		this.recursive = recursive;
+	   
+	    this.recursive = recursive;
 		
 		if (obj.getClass().isArray())
 		{
@@ -27,6 +32,7 @@ public class Inspector {
 		{
 			handleInspection(obj, recursive);
 		}
+		
 		
 	}
 	
@@ -41,13 +47,13 @@ public class Inspector {
 		if (table.contains(obj) && recursive == false)
 		{
 			return;
-		} else if (table.contains(obj) && recursive == true)
+		} else if (table.contains(obj.hashCode()) && recursive == true)
 		{
 			System.out.println("The object " + obj.getClass().getSimpleName() + " : " + obj.hashCode() + " has already been inspected");
 			return;
 		}
 		
-		table.put(obj, obj);
+		table.put(obj.hashCode(), obj);
 		
 		String name = getDeclaringClassName(obj.getClass());
 		System.out.println("The class name is: " + name);
@@ -61,17 +67,52 @@ public class Inspector {
 		System.out.println(interfaceNames);
 		
 		
-		String fieldsInfo = queryFields(obj);
+		String fieldsInfo = queryFields(obj, obj.getClass());
 		System.out.println("FIELDS:");
 		System.out.println(fieldsInfo);
 		
-		printMethodsInfo(obj.getClass());
-		
+		System.out.println("CONSTRUCTORS");
 		printConstructors(obj.getClass());
 		
 		
+		System.out.println("METHODS:");
+		printMethodsInfo(obj.getClass());
 		
-
+		if (obj.getClass().getSuperclass() != null)
+		{
+			Class superClass = obj.getClass().getSuperclass();			
+			System.out.println("Now display " + obj.getClass().getSimpleName() + " superClass");
+			printObjectInspection(superClass, obj, recursive);
+		
+		}
+	}
+	
+	public void printObjectInspection(Class aClass, Object obj, boolean recursive)
+	{
+		
+		String name = getDeclaringClassName(aClass);
+		System.out.println("The class name is: " + name);
+	
+		
+		String superClassName = getSuperClassName(aClass);
+		System.out.println("The Super Class is :" + superClassName);
+		
+		String interfaceNames = queryInterfaces(aClass);
+		System.out.println("The interfaces this class implements are: ");
+		System.out.println(interfaceNames);
+		
+		
+		String fieldsInfo = queryFields(obj, aClass);
+		System.out.println("FIELDS:");
+		System.out.println(fieldsInfo);
+		
+		System.out.println("CONSTRUCTORS");
+		printConstructors(obj.getClass());
+		
+		
+		System.out.println("METHODS:");
+		printMethodsInfo(obj.getClass());
+		
 	}
 	
 	
@@ -135,8 +176,11 @@ public class Inspector {
 	  
 	  public String getSuperClassName(Class classObject)
 	  {
+		      if (classObject.getSuperclass() != null)
+		      {
 	          String superName = classObject.getSuperclass().getName();
 	          return superName;
+		      }
 	  }
 	  
 	  public String queryInterfaces(Class classObject)
@@ -155,9 +199,8 @@ public class Inspector {
 	  }
 	  
 	  
-	  public String queryFields(Object obj)
+	  public String queryFields(Object obj, Class classObject)
 	  {
-		  Class classObject = obj.getClass();
 		  Field[] fields = classObject.getDeclaredFields();
 		  String fieldsAsString = "";
 		  
@@ -234,7 +277,7 @@ public class Inspector {
 				e.printStackTrace();
 			}
 		  } else 
-			{
+			{/*
 			  	if (recursive)
 			  	{
 			  		System.out.println("Now inspecting " + obj.getClass().getSimpleName() + " : " + obj.hashCode());
@@ -256,8 +299,9 @@ public class Inspector {
 			  		inspect(objectToInspect, recursive);
 			  		
 			  	} else {
+			  	*/
 				fieldValueAsString = obj.getClass().getSimpleName() + " : " + obj.hashCode() + "\n";
-			  	}
+			  	//}
 			}
 		  
 		  
